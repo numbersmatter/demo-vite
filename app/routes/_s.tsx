@@ -1,7 +1,9 @@
 import type { MetaFunction, LoaderFunctionArgs } from "@remix-run/node";
 import { json } from "@remix-run/node";
-import { Outlet, useLoaderData, } from "@remix-run/react";
+import { Outlet, isRouteErrorResponse, useLoaderData, useRouteError, } from "@remix-run/react";
+import { RouteError, StandardError } from "~/components/shell/page-error";
 import { StaffShell } from "~/components/shell/staff-shell";
+import { protectedRoute } from "~/lib/auth/auth.server";
 
 export const meta: MetaFunction = () => {
   return [
@@ -12,8 +14,12 @@ export const meta: MetaFunction = () => {
 
 
 export const loader = async ({ request, params }: LoaderFunctionArgs) => {
+  let { user, staffData } = await protectedRoute(request);
 
-  return json({});
+  const email = user.email
+
+  console.log("user", user);
+  return json({ user, staffData, email });
 };
 
 
@@ -30,6 +36,25 @@ export default function Index() {
 
         <Outlet />
       </div>
+      <div className=" h-16 bg-slate-400">
+
+      </div>
     </StaffShell>
   );
+}
+
+
+export function ErrorBoundary() {
+  const error = useRouteError();
+  if (isRouteErrorResponse(error)) {
+    const test = error
+    return <RouteError routeError={error} />
+  }
+  else if (error instanceof Error) {
+    return (
+      <StandardError error={error} />
+    );
+  } else {
+    return <h1>Unknown Error</h1>;
+  }
 }
