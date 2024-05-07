@@ -79,6 +79,7 @@ module.exports = {
         "@typescript-eslint/consistent-type-imports": "off",
         "@typescript-eslint/": "off",
         "@typescript-eslint/prefer-const": "off",
+        "react/prop-types": "off",
         // "@typescript-eslint/no-unre": "off",
       },
     },

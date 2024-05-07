@@ -1,3 +1,4 @@
+import { db } from "../firestore.server";
 import { DayTask, ValidDay, WeekTaskData } from "./types";
 
 export const createDayTaskStatus = (dayName: ValidDay, dayTasks: DayTask[]) => {
@@ -42,4 +43,17 @@ export const createWeekStatus = (taskData: WeekTaskData) => {
   );
 
   return statusObject;
+};
+
+export const getWeekplan = async (weekplanId: string | undefined) => {
+  if (!weekplanId) {
+    throw new Error("No weekplan id provided");
+  }
+  const weekplan = await db.weekplan.read(weekplanId);
+
+  if (!weekplan) {
+    throw new Error("Weekplan not found");
+  }
+
+  return weekplan;
 };
