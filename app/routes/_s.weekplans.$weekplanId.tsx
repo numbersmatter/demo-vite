@@ -14,6 +14,7 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
 
   const weekplan = await getWeekplan(params.weekplanId);
 
+
   return json({ weekplan });
 };
 

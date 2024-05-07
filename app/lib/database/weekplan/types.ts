@@ -26,10 +26,19 @@ export interface WeekTaskData {
   friday: DayTask[];
 }
 
+interface TaskDay {
+  monday: string[];
+  tuesday: string[];
+  wednesday: string[];
+  thursday: string[];
+  friday: string[];
+}
 export interface WeekPlanBase {
   title: string;
   taskData: WeekTaskData;
   taskStatus: TaskStatus;
+  tasks: { [key: string]: DayTask };
+  taskDay: TaskDay;
   dataEntry?: Record<string, string | number>;
 }
 

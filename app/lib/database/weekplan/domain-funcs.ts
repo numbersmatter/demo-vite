@@ -1,5 +1,5 @@
 import { db } from "../firestore.server";
-import { DayTask, ValidDay, WeekTaskData } from "./types";
+import { DayTask, ValidDay, WeekPlan, WeekTaskData } from "./types";
 
 export const createDayTaskStatus = (dayName: ValidDay, dayTasks: DayTask[]) => {
   const statusArray = dayTasks.map((task, index) => {
@@ -57,3 +57,5 @@ export const getWeekplan = async (weekplanId: string | undefined) => {
 
   return weekplan;
 };
+
+export const calculateWeekplanStatus = (weekplan: WeekPlan) => {};
