@@ -1,5 +1,5 @@
 import type { ActionFunctionArgs } from "@remix-run/node";
-import { json, useLoaderData } from "@remix-run/react"
+import { Form, json, useLoaderData } from "@remix-run/react"
 import type { LoaderFunctionArgs } from "@remix-run/node";
 import { DataTable } from "~/components/common/data-table";
 import { weekPlanColumns } from "~/lib/database/weekplan/tables";
@@ -9,6 +9,8 @@ import SectionHeaderDescription from "~/components/shell/section-headers";
 import { Button } from "~/components/ui/button";
 import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "~/components/ui/dialog";
 import { FormTextField } from "~/components/forms/textfield";
+import { FormTextArea } from "~/components/forms/text-area";
+import { DatePickerWithRange, DateRangeField } from "~/components/forms/date-picker";
 
 
 
@@ -46,25 +48,34 @@ export default function WeekPlanIndex() {
       <Dialog>
         <DialogTrigger>New Weekplan</DialogTrigger>
         <DialogContent>
-          <DialogHeader>
-            <DialogTitle>Create New Weekplan</DialogTitle>
-            <DialogDescription>
-              This will create a new weekplan for the staff to follow.
-            </DialogDescription>
-          </DialogHeader>
-          <div className="grid gap-4 py-4">
-            <FormTextField id="title" label="Week Plan Title" />
-          </div>
-          <DialogFooter>
-            <div className="w-full flex justify-between">
-              <DialogClose>
-                cancel
-              </DialogClose>
-              <Button>
-                Create
-              </Button>
+          <Form method="post">
+            <DialogHeader>
+              <DialogTitle>Create New Weekplan</DialogTitle>
+              <DialogDescription>
+                This will create a new weekplan for the staff to follow.
+              </DialogDescription>
+            </DialogHeader>
+            <div className="grid gap-4 py-4">
+              <FormTextField id="title" label="Week Plan Title" />
+              <DateRangeField
+                label="Week Of"
+                id="dateRange"
+                className=""
+                startDate={new Date()}
+                rangeDays={5}
+              />
             </div>
-          </DialogFooter>
+            <DialogFooter>
+              <div className="w-full flex justify-between">
+                <DialogClose>
+                  cancel
+                </DialogClose>
+                <Button>
+                  Create
+                </Button>
+              </div>
+            </DialogFooter>
+          </Form>
         </DialogContent>
       </Dialog>
     </div>

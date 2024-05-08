@@ -15,7 +15,6 @@ interface TaskStatus {
 export interface DayTask {
   title: string;
   description: string;
-  button_text: string;
   id: string;
 }
 export interface WeekTaskData {
@@ -35,11 +34,9 @@ interface TaskDay {
 }
 export interface WeekPlanBase {
   title: string;
-  taskData: WeekTaskData;
-  taskStatus: TaskStatus;
+  description: string;
   tasks: { [key: string]: DayTask };
   taskDay: TaskDay;
-  dataEntry?: Record<string, string | number>;
 }
 
 export interface WeekPlanDBModel extends WeekPlanBase {}

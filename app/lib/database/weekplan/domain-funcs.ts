@@ -1,4 +1,5 @@
 import { db } from "../firestore.server";
+import { allTasks, demoData } from "./demo-data";
 import { DayTask, ValidDay, WeekPlan, WeekTaskData } from "./types";
 
 export const createDayTaskStatus = (dayName: ValidDay, dayTasks: DayTask[]) => {
@@ -56,6 +57,31 @@ export const getWeekplan = async (weekplanId: string | undefined) => {
   }
 
   return weekplan;
+};
+
+export const makeWeekplan = async ({
+  title,
+  description,
+}: {
+  title: string;
+  description: string;
+}) => {
+  const testData = demoData;
+
+  const newPlanID = await db.weekplan.create({
+    title,
+    tasks: allTasks,
+    taskDay: {
+      monday: testData.monday.map((task) => task.id),
+      tuesday: testData.tuesday.map((task) => task.id),
+      wednesday: testData.wednesday.map((task) => task.id),
+      thursday: testData.thursday.map((task) => task.id),
+      friday: testData.friday.map((task) => task.id),
+    },
+    description: description,
+  });
+
+  return newPlanID;
 };
 
 export const calculateWeekplanStatus = (weekplan: WeekPlan) => {};
