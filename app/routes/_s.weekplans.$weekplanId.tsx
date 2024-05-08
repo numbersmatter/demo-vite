@@ -4,6 +4,7 @@ import SectionHeaderDescription from "~/components/shell/section-headers";
 import { protectedRoute } from "~/lib/auth/auth.server";
 import { db } from "~/lib/database/firestore.server";
 import { getWeekplan } from "~/lib/database/weekplan/domain-funcs";
+import { Link } from "lucide-react";
 
 
 
@@ -28,6 +29,9 @@ export default function WeekPlanIdRoute() {
       description={data.weekplan.title}
     />
     <Outlet />
+    <div>
+
+    </div>
   </div>
 
 }

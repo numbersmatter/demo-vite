@@ -18,7 +18,6 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
 
   const email = user.email
 
-  console.log("user", user);
   return json({ user, staffData, email });
 };
 

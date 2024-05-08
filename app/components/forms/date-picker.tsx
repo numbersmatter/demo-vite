@@ -64,8 +64,16 @@ export function DatePickerWithRange({
 
   return (
     <div className={cn("grid gap-2", className)}>
-      <input type="hidden" name={`${id}from`} value={date?.from?.toJSON()} />
-      <input type="hidden" name={`${id}to`} value={date?.to?.toJSON()} />
+      <input
+        type="hidden"
+        name={`${id}from`}
+        value={date?.from?.toJSON()}
+      />
+      <input
+        type="hidden"
+        name={`${id}to`}
+        value={date?.to?.toJSON()}
+      />
       <Popover>
         <PopoverTrigger asChild>
           <Button

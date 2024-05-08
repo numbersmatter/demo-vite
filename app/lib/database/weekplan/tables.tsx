@@ -14,7 +14,7 @@ export const weekPlanColumns: ColumnDef<WeekPlan>[] = [
     header: "Link",
     cell: ({ row }) => {
       return (
-        <Link to={`${row.original.id}`}>
+        <Link to={`/weekplans/${row.original.id}`}>
           View
         </Link>
       )

@@ -12,13 +12,7 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
   await protectedRoute(request);
   const weekplan = await getWeekplan(params.weekplanId);
 
-  const taskDay = {
-    monday: weekplan.taskData.monday.map((task) => task.id),
-    tuesday: weekplan.taskData.tuesday.map((task) => task.id),
-    wednesday: weekplan.taskData.wednesday.map((task) => task.id),
-    thursday: weekplan.taskData.thursday.map((task) => task.id),
-    friday: weekplan.taskData.friday.map((task) => task.id),
-  }
+
 
 
   return null;

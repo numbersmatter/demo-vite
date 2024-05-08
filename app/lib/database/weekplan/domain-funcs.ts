@@ -1,6 +1,8 @@
+import { z } from "zod";
 import { db } from "../firestore.server";
 import { allTasks, demoData } from "./demo-data";
 import { DayTask, ValidDay, WeekPlan, WeekTaskData } from "./types";
+import { makeDomainFunction } from "domain-functions";
 
 export const createDayTaskStatus = (dayName: ValidDay, dayTasks: DayTask[]) => {
   const statusArray = dayTasks.map((task, index) => {
@@ -83,5 +85,35 @@ export const makeWeekplan = async ({
 
   return newPlanID;
 };
+
+export const CreateWeekplanSchema = z.object({
+  title: z.string(),
+  dateRangefrom: z.string(),
+  dateRangeto: z.string(),
+});
+
+export const createWeekPlan = makeDomainFunction(CreateWeekplanSchema)(
+  async (values) => {
+    const startDate = new Date(values.dateRangefrom).toLocaleDateString();
+    const endDate = new Date(values.dateRangeto).toLocaleDateString();
+
+    const description = `Week of ${startDate} - ${endDate}`;
+
+    const newPlanID = await db.weekplan.create({
+      title: values.title,
+      tasks: allTasks,
+      taskDay: {
+        monday: demoData.monday.map((task) => task.id),
+        tuesday: demoData.tuesday.map((task) => task.id),
+        wednesday: demoData.wednesday.map((task) => task.id),
+        thursday: demoData.thursday.map((task) => task.id),
+        friday: demoData.friday.map((task) => task.id),
+      },
+      description: description,
+    });
+
+    return newPlanID;
+  }
+);
 
 export const calculateWeekplanStatus = (weekplan: WeekPlan) => {};

@@ -1,5 +1,5 @@
 import type { ActionFunctionArgs } from "@remix-run/node";
-import { Form, json, useLoaderData } from "@remix-run/react"
+import { Form, Link, json, redirect, useLoaderData } from "@remix-run/react"
 import type { LoaderFunctionArgs } from "@remix-run/node";
 import { DataTable } from "~/components/common/data-table";
 import { weekPlanColumns } from "~/lib/database/weekplan/tables";
@@ -10,7 +10,12 @@ import { Button } from "~/components/ui/button";
 import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "~/components/ui/dialog";
 import { FormTextField } from "~/components/forms/textfield";
 import { FormTextArea } from "~/components/forms/text-area";
-import { DatePickerWithRange, DateRangeField } from "~/components/forms/date-picker";
+import {
+  DatePickerWithRange,
+  DateRangeField
+} from "~/components/forms/date-picker";
+import { performMutation } from 'remix-forms'
+import { CreateWeekplanSchema, createWeekPlan } from "~/lib/database/weekplan/domain-funcs";
 
 
 
@@ -29,7 +34,18 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
 
 
 export const action = async ({ request }: ActionFunctionArgs) => {
-  return null;
+  await protectedRoute(request);
+
+  const result = await performMutation({
+    request,
+    schema: CreateWeekplanSchema,
+    mutation: createWeekPlan,
+  });
+
+  if (!result.success) {
+    return json(result, { status: 400 });
+  }
+  return redirect(`/weekplans/${result.data}`);
 };
 
 
@@ -80,6 +96,9 @@ export default function WeekPlanIndex() {
       </Dialog>
     </div>
     <DataTable columns={weekPlanColumns} data={data.weekPlans} />
+    <Link to={`/weekplans/M1uDd9VwpnXjMK9V8pYN`}>
+      test
+    </Link>
   </div>
 
 }
