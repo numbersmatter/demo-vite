@@ -4,7 +4,7 @@ import invariant from "tiny-invariant";
 import { Button } from "~/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "~/components/ui/card";
 import { protectedRoute } from "~/lib/auth/auth.server";
-import { getWeekplan } from "~/lib/database/weekplan/domain-funcs";
+import { TaskStatus, calculateWeekplanStatus, getWeekplan } from "~/lib/database/weekplan/domain-funcs";
 import { loader as weekplanLoader } from "~/routes/_s.weekplans.$weekplanId";
 
 
@@ -26,17 +26,38 @@ export default function WeekPlanIdIndexRoute() {
   const weekplan = data?.weekplan
   invariant(weekplan, "weekplan not found")
 
+  const taskStatus = data.taskStatus
 
+
+  const days = ["monday", "tuesday", "wednesday", "thursday", "friday"];
+
+
+  // const taskStatus = calculateWeekplanStatus(weekplan);
 
   return <div className="py-3">
     <Card >
       <CardHeader>
         <CardTitle>Weekplan</CardTitle>
-        <CardDescription>{data.weekplan.title}</CardDescription>
+        <CardDescription>
+          {data.weekplan?.description}
+        </CardDescription>
       </CardHeader>
       <CardContent>
         <p>Weeklyplan</p>
-        <pre>{JSON.stringify(weekplanLoader, null, 2)}</pre>
+        {
+          days.map(day => {
+            const dayTasks = taskStatus[day as keyof typeof taskStatus]
+            return <div key={day} className="py-2">
+              <h2>{day.toUpperCase()}</h2>
+              <p>
+                {dayTasks.incomplete.length} / {dayTasks.all.length} remaining
+
+              </p>
+            </div>
+          })
+
+        }
+
       </CardContent>
       <CardFooter>
         <Button>Start Monday</Button>

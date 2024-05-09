@@ -3,7 +3,7 @@ import type { LoaderFunctionArgs } from "@remix-run/node";
 import SectionHeaderDescription from "~/components/shell/section-headers";
 import { protectedRoute } from "~/lib/auth/auth.server";
 import { db } from "~/lib/database/firestore.server";
-import { getWeekplan } from "~/lib/database/weekplan/domain-funcs";
+import { calculateWeekplanStatus, getWeekplan } from "~/lib/database/weekplan/domain-funcs";
 import { Link } from "lucide-react";
 
 
@@ -14,9 +14,10 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   await protectedRoute(request);
 
   const weekplan = await getWeekplan(params.weekplanId);
+  const taskStatus = calculateWeekplanStatus(weekplan);
 
 
-  return json({ weekplan });
+  return json({ weekplan, taskStatus });
 };
 
 

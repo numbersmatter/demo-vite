@@ -80,6 +80,7 @@ export const makeWeekplan = async ({
       thursday: testData.thursday.map((task) => task.id),
       friday: testData.friday.map((task) => task.id),
     },
+    taskEntry: {},
     description: description,
   });
 
@@ -110,10 +111,59 @@ export const createWeekPlan = makeDomainFunction(CreateWeekplanSchema)(
         friday: demoData.friday.map((task) => task.id),
       },
       description: description,
+      taskEntry: {},
     });
 
     return newPlanID;
   }
 );
 
-export const calculateWeekplanStatus = (weekplan: WeekPlan) => {};
+const days = ["monday", "tuesday", "wednesday", "thursday", "friday"];
+export interface TaskStatus {
+  incomplete: string[];
+  all: string[];
+}
+
+export const calculateWeekplanStatus = (weekplan: WeekPlan) => {
+  const taskEntry = weekplan.taskEntry;
+
+  const mondayIncompleteTasks = weekplan.taskDay.monday.filter(
+    (taskId) => !taskEntry[taskId]
+  );
+  const tuesdayIncompleteTasks = weekplan.taskDay.tuesday.filter(
+    (taskId) => !taskEntry[taskId]
+  );
+
+  const wednesdayIncompleteTasks = weekplan.taskDay.wednesday.filter(
+    (taskId) => !taskEntry[taskId]
+  );
+  const thursdayIncompleteTasks = weekplan.taskDay.thursday.filter(
+    (taskId) => !taskEntry[taskId]
+  );
+  const fridayIncompleteTasks = weekplan.taskDay.friday.filter(
+    (taskId) => !taskEntry[taskId]
+  );
+
+  return {
+    monday: {
+      incomplete: mondayIncompleteTasks,
+      all: weekplan.taskDay.monday,
+    } as TaskStatus,
+    tuesday: {
+      incomplete: tuesdayIncompleteTasks,
+      all: weekplan.taskDay.tuesday,
+    } as TaskStatus,
+    wednesday: {
+      incomplete: wednesdayIncompleteTasks,
+      all: weekplan.taskDay.wednesday,
+    } as TaskStatus,
+    thursday: {
+      incomplete: thursdayIncompleteTasks,
+      all: weekplan.taskDay.thursday,
+    } as TaskStatus,
+    friday: {
+      incomplete: fridayIncompleteTasks,
+      all: weekplan.taskDay.friday,
+    } as TaskStatus,
+  };
+};
