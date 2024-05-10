@@ -6,9 +6,8 @@ import {
   Timestamp,
   getFirestore,
 } from "firebase-admin/firestore";
-import { ServiceListId } from "./types";
+import { ItemLine, ServiceListId } from "./types";
 import { db_paths } from "../firestore.server";
-import { ItemLine } from "~/lib/value-estimation/types/item-estimations";
 
 export interface TransactionRecord {
   seat_id: string;

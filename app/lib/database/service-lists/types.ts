@@ -1,4 +1,3 @@
-import { ItemLine } from "~/lib/value-estimation/types/item-estimations";
 import { SeatId } from "../seats/types/seats-model";
 import {
   ServicePeriod,
@@ -55,4 +54,12 @@ export interface ServiceListAdd {
   seats_array: SeatId[];
   service_type: ServiceTransactionType;
   service_items: ItemLine[];
+}
+
+export interface ItemLine {
+  item_name: string;
+  quantity: number;
+  value: number;
+  item_id: string;
+  memo?: string;
 }

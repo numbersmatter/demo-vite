@@ -9,6 +9,7 @@ import {
 } from "firebase-admin/firestore";
 
 import {
+  ItemLine,
   ListStatus,
   ServiceList,
   ServiceListAdd,
@@ -16,7 +17,6 @@ import {
   ServiceListId,
 } from "./types";
 import { db_paths } from "../firestore.server";
-import { ItemLine } from "~/lib/value-estimation/types/item-estimations";
 
 // function toFirestore
 const serviceListToDbModel = (serviceList: ServiceList): ServiceListDbModel => {
@@ -60,6 +60,25 @@ const create = async (serviceList: ServiceListAdd) => {
   };
   const colRef = serviceLists_collection();
   const docRef = await colRef.add(data);
+  return docRef.id;
+};
+const makeServiceList = async ({
+  serviceListId,
+  serviceList,
+}: {
+  serviceList: ServiceListAdd;
+  serviceListId: string;
+}) => {
+  const data = {
+    ...serviceList,
+    id: "",
+    created_date: new Date(),
+    applied_date: new Date(),
+    status: "preparing" as ListStatus,
+  };
+  const colRef = serviceLists_collection();
+  const docRef = colRef.doc(serviceListId);
+  const docWrite = await docRef.set(data);
   return docRef.id;
 };
 
@@ -132,6 +151,7 @@ const inPeriod = async (periodId: string) => {
 
 export const serviceListsDb = {
   create,
+  makeServiceList,
   read,
   update,
   remove,

@@ -11,7 +11,6 @@ import { Button } from "~/components/ui/button";
 import { getAction } from "~/lib/utils";
 import { db } from "~/lib/database/firestore.server";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "~/components/ui/card"
-import YouTube, { YouTubeProps } from 'react-youtube';
 import { DayTasks } from "~/components/task-components/task-steps";
 
 

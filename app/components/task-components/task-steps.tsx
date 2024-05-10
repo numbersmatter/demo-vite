@@ -319,44 +319,13 @@ function PrepareInventory({ taskComplete }: { taskComplete: boolean }) {
   </div>
 };
 function PlanServiceMenu({ taskComplete }: { taskComplete: boolean }) {
-  const [open, setOpen] = useState(false)
-  const setStatusFetcher = useFetcher();
-  const handleMarkComplete = async () => {
-    await setStatusFetcher.submit(
-      {
-        newStatus: taskComplete ? "incomplete" : "complete",
-        _action: "setTaskStatus"
-      },
-      {
-        method: "post",
-      })
-  }
-
-  const task = {
-    name: "Plan Service Menu",
-    description: "The menu of items that will be sent in each box."
-  }
 
   const explainText = "We try to have roughly similar items in each box. Our main limitation is this goal is what we receive from Second Harvest Food Bank. We don't always have 60 of one exact item in each box. So we try to substitute with similar items when necessary."
 
   return <div className="py-4">
 
 
-    <Card>
-      <CardHeader>
-        <CardTitle>Menu Items</CardTitle>
-        <CardDescription>
-          Add the menu items for this service list.
-        </CardDescription>
-      </CardHeader>
-      <DataTable
-        columns={[]}
-        data={[]}
-      />
-      <CardFooter className="py-2">
-        {/* <AddMenuItemDialog actionUrl={""} /> */}
-      </CardFooter>
-    </Card>
+
 
   </div>
 };
@@ -386,18 +355,6 @@ function PlaceOrder({ taskComplete }: { taskComplete: boolean }) {
   </div>
 };
 function ReserveTruck({ taskComplete }: { taskComplete: boolean }) {
-  const [open, setOpen] = useState(false);
-  const setStatusFetcher = useFetcher();
-  const handleMarkComplete = async () => {
-    await setStatusFetcher.submit(
-      {
-        newStatus: taskComplete ? "incomplete" : "complete",
-        _action: "setTaskStatus"
-      },
-      {
-        method: "post",
-      })
-  }
 
 
 

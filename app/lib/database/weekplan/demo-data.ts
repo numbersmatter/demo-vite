@@ -297,7 +297,7 @@ export const helperText = {
   "prepare-inventory":
     "If you have time you can do a quick inventory of the food items that you have received.",
   "plan-menu":
-    "Plan the menu items for the week. This will help you know what to expect and what you need to prepare.",
+    "We try to have roughly similar items in each box. Our main limitation is this goal is what we receive from Second Harvest Food Bank. We don't always have 60 of one exact item in each box. So we try to substitute with similar items when necessary.",
   "place-order":
     "Place the order for next week's food delivery from Second Harvest. We place a weekly order from Second Harvest Food Bank. This order is placed on Tuesday for pickup the following Monday.",
   "reserve-truck":
