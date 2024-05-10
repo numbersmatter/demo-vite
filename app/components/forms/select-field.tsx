@@ -18,7 +18,7 @@ export function SelectField({
 }) {
 
   return <div className="grid grid-cols-1 gap-2 pb-1 md:grid-cols-4 md:items-center md:gap-4">
-    <Label className="text-left md:text-right">{label}</Label>
+    <span className="text-left md:text-right">{label}</span>
     <Select name={id} defaultValue={defaultValue ?? ""}>
       <SelectTrigger className="col-span-3">
         <SelectValue placeholder={placeholder} />

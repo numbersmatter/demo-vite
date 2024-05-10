@@ -132,7 +132,7 @@ export function DateRangeField({
 }) {
 
   return <div className="grid grid-cols-1 gap-2 pb-1 md:grid-cols-4 md:items-center md:gap-4">
-    <Label htmlFor={id} className="text-left md:text-right">{label}</Label>
+    <span className="text-left md:text-right">{label}</span>
     <DatePickerWithRange
       id={id}
       className={className}

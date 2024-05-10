@@ -133,7 +133,7 @@ export const createWeekPlan = makeDomainFunction(CreateWeekplanSchema)(
       dataEntry: {},
     });
 
-    return newPlanID;
+    return { newPlanID, values, description };
   }
 );
 

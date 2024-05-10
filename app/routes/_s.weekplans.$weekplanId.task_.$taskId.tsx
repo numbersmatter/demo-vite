@@ -109,7 +109,9 @@ export default function WeekPlanTask() {
       </CardContent>
       <CardFooter className="flex justify-between">
         <Form method="post">
-          <Button variant={"secondary"} name="_action" value="toDayPage" > Back To Day</Button>
+          <Button variant={"secondary"} name="_action" value="toDayPage" >
+            Back To Day
+          </Button>
         </Form>
         <Form method="post" className="flex py-4 justify-end">
           <input type="hidden" name="taskId" value={currentTask.id} />

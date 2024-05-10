@@ -71,7 +71,7 @@ const makeServiceList = async ({
 }) => {
   const data = {
     ...serviceList,
-    id: "",
+    id: serviceListId,
     created_date: new Date(),
     applied_date: new Date(),
     status: "preparing" as ListStatus,
