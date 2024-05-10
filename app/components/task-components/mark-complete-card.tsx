@@ -1,9 +1,10 @@
+import { Form } from "@remix-run/react"
 import { Button } from "../ui/button"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "../ui/card"
 
 
 export type Task = {
-  name: string,
+  title: string,
   description: string,
 }
 
@@ -13,7 +14,7 @@ export function TaskCard({ task, children }: { task: Task, children?: React.Reac
     <Card>
       <CardHeader>
         <CardTitle>
-          {task.name}
+          {task.title}
         </CardTitle>
         <CardDescription>
           {task.description}
@@ -23,7 +24,9 @@ export function TaskCard({ task, children }: { task: Task, children?: React.Reac
         {children}
       </CardContent>
       <CardFooter className="">
-        <Button>Next</Button>
+        <Form method="post">
+          <Button variant={"secondary"} name="_action" value="toDayPage" > Back To Day</Button>
+        </Form>
       </CardFooter>
     </Card>
   )
@@ -35,7 +38,7 @@ function CheckOutTruck({ taskComplete, errors, dataEntry }: { taskComplete: bool
 
 
   const task = {
-    name: "Check Out Truck",
+    title: "Check Out Truck",
     description: "Enter the odometer reading for the truck."
   }
 

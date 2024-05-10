@@ -65,7 +65,7 @@ export default function WeekPlanIdDayRoute() {
 
 
   const taskSteps = taskDay[day].map((taskId) => {
-    const task = tasks[taskId];
+    const task = tasks[taskId] ?? { title: "Error Title", description: "error description" };
 
     return {
       name: task.title,
@@ -94,7 +94,8 @@ export default function WeekPlanIdDayRoute() {
           steps={taskSteps}
         />
       </div>
-      {/* <pre>{JSON.stringify(data, null, 2)}</pre> */}
+      <pre>{JSON.stringify(taskDay["monday"], null, 2)}</pre>
+      <pre>{JSON.stringify(taskStatus, null, 2)}</pre>
     </div>
   );
 }

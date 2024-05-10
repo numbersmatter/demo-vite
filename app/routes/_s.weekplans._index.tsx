@@ -60,9 +60,13 @@ export default function WeekPlanIndex() {
       header={data.sectionText.header}
       description={data.sectionText.description}
     />
-    <div className="py-3">
+    <div className="py-5">
       <Dialog>
-        <DialogTrigger>New Weekplan</DialogTrigger>
+        <DialogTrigger asChild>
+          <Button>
+            Create New Weekplan
+          </Button>
+        </DialogTrigger>
         <DialogContent>
           <Form method="post">
             <DialogHeader>
@@ -96,9 +100,7 @@ export default function WeekPlanIndex() {
       </Dialog>
     </div>
     <DataTable columns={weekPlanColumns} data={data.weekPlans} />
-    <Link to={`/weekplans/M1uDd9VwpnXjMK9V8pYN`}>
-      test
-    </Link>
+
   </div>
 
 }

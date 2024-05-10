@@ -1,8 +1,25 @@
 import { z } from "zod";
 import { db } from "../firestore.server";
 import { allTasks, demoData } from "./demo-data";
-import { DayTask, ValidDay, WeekPlan, WeekTaskData } from "./types";
+import { DayTask, TaskDay, ValidDay, WeekPlan, WeekTaskData } from "./types";
 import { makeDomainFunction } from "domain-functions";
+
+const TaskCompleteSchema = z.object({
+  "checkout-truck": z.coerce.number(),
+  "drive-second-harvest": z.boolean(),
+  "accept-order": z.boolean(),
+  "drive-cis-t": z.boolean(),
+  "unload-cold-pallets": z.boolean(),
+  "unload-to-staging": z.boolean(),
+  "store-dry-goods": z.boolean(),
+  "send-message": z.boolean(),
+  "prepare-inventory": z.boolean(),
+  "plan-menu": z.boolean(),
+  "place-order": z.boolean(),
+  "reserve-truck": z.boolean(),
+  "prepare-cold-items": z.boolean(),
+  "stage-dry-goods": z.boolean(),
+});
 
 export const createDayTaskStatus = (dayName: ValidDay, dayTasks: DayTask[]) => {
   const statusArray = dayTasks.map((task, index) => {
@@ -82,6 +99,7 @@ export const makeWeekplan = async ({
     },
     taskEntry: {},
     description: description,
+    dataEntry: {},
   });
 
   return newPlanID;
@@ -112,6 +130,7 @@ export const createWeekPlan = makeDomainFunction(CreateWeekplanSchema)(
       },
       description: description,
       taskEntry: {},
+      dataEntry: {},
     });
 
     return newPlanID;
@@ -166,4 +185,48 @@ export const calculateWeekplanStatus = (weekplan: WeekPlan) => {
       all: weekplan.taskDay.friday,
     } as TaskStatus,
   };
+};
+
+const toggleTaskComplete = async ({
+  taskId,
+  weekplanId,
+  status,
+}: {
+  weekplanId: string;
+  taskId: string;
+  status: string;
+}) => {
+  if (status === "complete") {
+    const updateData = {
+      [`taskEntry.${taskId}`]: "complete",
+    };
+    return await db.weekplan.update({ weekplanId, data: updateData });
+  }
+
+  const updateData = {
+    [`taskEntry.${taskId}`]: "",
+  };
+  return await db.weekplan.update({ weekplanId, data: updateData });
+};
+
+export const ToggleCompleteSchema = z.object({
+  taskId: z.string(),
+  mark: z.enum(["complete", "incomplete"]),
+});
+
+export const markTaskCompleteMutation = (weekplanId: string) =>
+  makeDomainFunction(ToggleCompleteSchema)(async (values) => {
+    return toggleTaskComplete({
+      weekplanId,
+      taskId: values.taskId,
+      status: values.mark,
+    });
+  });
+
+export const findTaskDay = (weekplan: WeekPlan, taskId: string) => {
+  const taskDay = weekplan.taskDay;
+  const day = days.find((day) =>
+    taskDay[day as keyof TaskDay].includes(taskId)
+  );
+  return day;
 };

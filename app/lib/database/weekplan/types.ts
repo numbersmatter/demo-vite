@@ -25,7 +25,7 @@ export interface WeekTaskData {
   friday: DayTask[];
 }
 
-interface TaskDay {
+export interface TaskDay {
   monday: string[];
   tuesday: string[];
   wednesday: string[];
@@ -38,6 +38,7 @@ export interface WeekPlanBase {
   tasks: { [key: string]: DayTask };
   taskDay: TaskDay;
   taskEntry: { [key: string]: string };
+  dataEntry: { [key: string]: string };
 }
 
 export interface WeekPlanDBModel extends WeekPlanBase {}
