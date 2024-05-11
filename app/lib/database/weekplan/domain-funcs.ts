@@ -230,3 +230,18 @@ export const findTaskDay = (weekplan: WeekPlan, taskId: string) => {
   );
   return day;
 };
+
+export const recordDataEntry = async ({
+  weekplanId,
+  taskId,
+  dataEntry,
+}: {
+  weekplanId: string;
+  taskId: string;
+  dataEntry: string;
+}) => {
+  const updateData = {
+    [`dataEntry.${taskId}`]: dataEntry,
+  };
+  return await db.weekplan.update({ weekplanId, data: updateData });
+};

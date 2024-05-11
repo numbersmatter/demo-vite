@@ -1,6 +1,6 @@
 /* eslint-disable no-extra-semi */
 import { Button } from "~/components/ui/button";
-import { Form, useFetcher } from "@remix-run/react";
+import { Form, useFetcher, useParams } from "@remix-run/react";
 import { FormNumberField } from "~/components/forms/number-field";
 import { useRef, useState } from "react";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "~/components/ui/card";
@@ -25,18 +25,26 @@ import {
   DialogTrigger,
 } from "~/components/ui/dialog"
 import { DataTable } from "../common/data-table";
+import { DialogFormSingleNumberInput } from "../forms/dialog-form";
 
 
 function CheckOutTruck({ taskComplete, errors, dataEntry }: { taskComplete: boolean, errors: Record<string, string[]>, dataEntry: Record<string, string | number> }) {
   const [open, setOpen] = useState(false)
+  const params = useParams();
+  const weekplanId = params.weekplanId as string
+  const taskId = params.taskId as string
 
 
   const odometerError = errors.odometer ? errors.odometer[0] : ""
 
   const currentOdometer = dataEntry.odometer ? dataEntry.odometer : 0
+  const odometerCurrent = currentOdometer as number
+
+
+  const submitUrl = `/weekplans/${weekplanId}/task/${taskId}/number`
 
   return (
-    <div className="py-4">
+    <div className="py-4 ">
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogTrigger asChild>
           <Button>
@@ -70,6 +78,15 @@ function CheckOutTruck({ taskComplete, errors, dataEntry }: { taskComplete: bool
           </Form>
         </DialogContent>
       </Dialog>
+      <DialogFormSingleNumberInput
+        label="Odometer2"
+        title="Enter Odometer on Truck fetcher"
+        description="Enter the current odometer reading on the truck."
+        defaultNumber={currentOdometer as number}
+        submitUrl={submitUrl}
+      />
+
+
     </div>
   )
 }

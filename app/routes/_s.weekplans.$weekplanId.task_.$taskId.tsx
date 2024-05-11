@@ -51,6 +51,13 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
 
     return redirect(`/weekplans/${weekplanId}/day/${dayOfTask}`);
   }
+  if (action === "dataEntry") {
+    const result = await performMutation({
+      request,
+      schema: ToggleCompleteSchema,
+      mutation: markTaskCompleteMutation(weekplanId),
+    })
+  }
 
   if (action === "toDayPage") {
     return redirect(`/weekplans/${weekplanId}/day/${dayOfTask}`);
