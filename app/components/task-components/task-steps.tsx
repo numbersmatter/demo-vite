@@ -37,47 +37,15 @@ function CheckOutTruck({ taskComplete, errors, dataEntry }: { taskComplete: bool
 
   const odometerError = errors.odometer ? errors.odometer[0] : ""
 
-  const currentOdometer = dataEntry.odometer ? dataEntry.odometer : 0
-  const odometerCurrent = currentOdometer as number
+  const currentOdometer = dataEntry["checkout-truck"] ?? 0
+
 
 
   const submitUrl = `/weekplans/${weekplanId}/task/${taskId}/number`
 
   return (
     <div className="py-4 ">
-      <Dialog open={open} onOpenChange={setOpen}>
-        <DialogTrigger asChild>
-          <Button>
-            Enter Odometer
-          </Button>
-        </DialogTrigger>
-        <DialogContent>
-          <Form method="POST" className="mx-auto w-full max-w-sm">
-            <DialogHeader>
-              <DialogTitle>
-                Enter Odometer on Truck
-              </DialogTitle>
-              <DialogDescription>
-                Enter the current odometer reading on the truck.
-              </DialogDescription>
-            </DialogHeader>
-            <div className="grid grid-cols-1 gap-2 p-4">
-              <FormNumberField
-                label="Odometer" id="odometer"
-                defaultValue={currentOdometer}
-                error={odometerError}
-              />
 
-            </div>
-            <DialogFooter className="pt-2 ">
-              <Button type="submit" name="_action" value="dataEntry">
-                Submit
-              </Button>
-
-            </DialogFooter>
-          </Form>
-        </DialogContent>
-      </Dialog>
       <DialogFormSingleNumberInput
         label="Odometer2"
         title="Enter Odometer on Truck fetcher"

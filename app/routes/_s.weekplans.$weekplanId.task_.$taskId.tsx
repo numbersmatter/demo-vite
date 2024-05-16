@@ -91,6 +91,7 @@ export default function WeekPlanTask() {
   const helperText = (data.taskHelperText as TaskHelperText)[currentTask.id] ?? ""
 
   const markValue = "complete"
+  const dataEntry = data.weekplan.dataEntry
 
 
   return <div>
@@ -111,7 +112,7 @@ export default function WeekPlanTask() {
           task_id={currentTask.id}
           taskStatus={{}}
           errors={{}}
-          dataEntry={{}}
+          dataEntry={dataEntry}
         />
       </CardContent>
       <CardFooter className="flex justify-between">
@@ -130,7 +131,7 @@ export default function WeekPlanTask() {
 
       </CardFooter>
     </Card>
-    {/* <pre>{JSON.stringify(data.weekplan.tasks, null, 2)}</pre> */}
+    <pre>{JSON.stringify(data.weekplan.dataEntry, null, 2)}</pre>
   </div>;
 }
 

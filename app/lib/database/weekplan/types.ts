@@ -38,7 +38,7 @@ export interface WeekPlanBase {
   tasks: { [key: string]: DayTask };
   taskDay: TaskDay;
   taskEntry: { [key: string]: string };
-  dataEntry: { [key: string]: string };
+  dataEntry: { [key: string]: string | number };
 }
 
 export interface WeekPlanDBModel extends WeekPlanBase {}

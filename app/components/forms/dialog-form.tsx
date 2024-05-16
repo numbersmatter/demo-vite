@@ -12,6 +12,8 @@ import { Button } from "~/components/ui/button"
 import { FormTextField } from "./textfield"
 import { FormNumberField } from "./number-field"
 import { useFetcher } from "@remix-run/react";
+import { useEffect, useState } from "react";
+import { action } from "~/routes/_s.weekplans.$weekplanId.task.$taskId.number"
 
 
 export function DialogFormSingleNumberInput({
@@ -27,9 +29,22 @@ export function DialogFormSingleNumberInput({
   defaultNumber: number,
   submitUrl: string,
 }) {
-  const fetcher = useFetcher();
+  const fetcher = useFetcher<typeof action>();
+  const [open, setOpen] = useState(false);
+  const actionData = fetcher.data;
+  const isFetching = fetcher.state !== "idle";
+  const isSuccess = actionData ?
+    actionData.result.success :
+    false;
 
-  return <Dialog>
+  useEffect(() => {
+    if (isSuccess && !isFetching) {
+      setOpen(false)
+    }
+  }, [isSuccess, isFetching])
+
+
+  return <Dialog open={open} onOpenChange={setOpen} >
     <DialogTrigger asChild>
       <Button>
         {title}
@@ -63,7 +78,9 @@ export function DialogFormSingleNumberInput({
           </div>
         </DialogFooter>
       </fetcher.Form>
-
+      {
+        actionData ? <pre className="p-4">{JSON.stringify(actionData, null, 2)}</pre> : null
+      }
     </DialogContent>
   </Dialog>
 }
