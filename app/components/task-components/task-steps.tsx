@@ -25,7 +25,7 @@ import {
   DialogTrigger,
 } from "~/components/ui/dialog"
 import { DataTable } from "../common/data-table";
-import { DialogFormSingleNumberInput } from "../forms/dialog-form";
+import { DialogFormSingleNumberInput, DialogFormSingleTextInput } from "../forms/dialog-form";
 
 
 function CheckOutTruck({ taskComplete, errors, dataEntry }: { taskComplete: boolean, errors: Record<string, string[]>, dataEntry: Record<string, string | number> }) {
@@ -250,32 +250,27 @@ function MoveToStorage({ taskComplete }: { taskComplete: boolean }) {
 
   </div>
 };
-function MessageFamilies({ taskComplete }: { taskComplete: boolean }) {
-  const [open, setOpen] = useState(false)
-  const setStatusFetcher = useFetcher();
-  const handleMarkComplete = async () => {
-    await setStatusFetcher.submit(
-      {
-        newStatus: taskComplete ? "incomplete" : "complete",
-        _action: "setTaskStatus"
-      },
-      {
-        method: "post",
-      })
-  }
+function MessageFamilies({ taskComplete, dataEntry }: { taskComplete: boolean, dataEntry: Record<string, string | number> }) {
+  const params = useParams();
+  const weekplanId = params.weekplanId as string
+  const taskId = params.taskId as string
 
-  const task = {
-    name: "Send Message to Families",
-    description: "Allows families to reserve a time for food pickup."
-  }
+  const messageText = dataEntry[taskId] ?? "Hello, we are preparing boxes for this week. Please reserve a time to pick up your box."
 
-  const explainText = "We do not have the resources to deliver all food boxes via DoorDash. For families not on DoorDash delivery we send them a message telling them how to reserve a time to pickup their box."
 
   return <div className="py-4">
+    <p className="py-2">
+      <span className="font-semibold">Current Message: </span>{messageText}
+    </p>
 
-    <div className="mt-4">
-
-    </div>
+    <DialogFormSingleTextInput
+      label="Message to Families"
+      title="Send Message to Families"
+      description="Enter the message to send to families."
+      defaultText={messageText as string}
+      submitUrl={`/weekplans/${weekplanId}/task/${taskId}/text`}
+      textarea={true}
+    />
   </div>
 };
 function PrepareInventory({ taskComplete }: { taskComplete: boolean }) {
@@ -496,7 +491,7 @@ export function DayTasks({
     case 'store-dry-goods':
       return <MoveToStorage taskComplete={taskComplete} />
     case 'send-message':
-      return <MessageFamilies taskComplete={taskComplete} />
+      return <MessageFamilies taskComplete={taskComplete} dataEntry={dataEntry} />
     case 'prepare-inventory':
       return <PrepareInventory taskComplete={taskComplete} />
     case 'plan-menu':

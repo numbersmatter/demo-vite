@@ -10,6 +10,12 @@ interface TaskNumberEntry {
   };
 }
 
+interface TaskTextEntry {
+  text: string;
+  weekplanId: string;
+  taskId: string;
+}
+
 export const confirmWeekPlanTaskExists = async (
   weekplanId: string,
   taskId: string
@@ -43,6 +49,19 @@ export const enterTaskNumberData = async (taskNumberEntry: TaskNumberEntry) => {
 
   const writeData = await db.weekplan.update({
     weekplanId: taskNumberEntry.weekplanId,
+    data: updateData,
+  });
+
+  return writeData;
+};
+
+export const enterTaskTextData = async (taskTextEntry: TaskTextEntry) => {
+  const updateData = {
+    [`dataEntry.${taskTextEntry.taskId}`]: taskTextEntry.text,
+  };
+
+  const writeData = await db.weekplan.update({
+    weekplanId: taskTextEntry.weekplanId,
     data: updateData,
   });
 
