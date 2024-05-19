@@ -39,6 +39,17 @@ export function DialogFormSingleNumberInput({
     actionData.result.success :
     false;
 
+  const errorData = !actionData
+    ? { idError: [""], numberEntered: [""], }
+    : actionData.result.success
+      ? { idError: [""], numberEntered: [""] }
+      : { ...actionData.result.errors };
+
+  const idError = errorData.idError?.[0] ?? "";
+  const numberEnteredError = errorData.numberEntered?.[0] ?? "";
+
+
+
   useEffect(() => {
     if (isSuccess && !isFetching) {
       setOpen(false)
@@ -63,10 +74,14 @@ export function DialogFormSingleNumberInput({
           </DialogDescription>
         </DialogHeader>
         <div className="grid gap-4 py-4">
+          {
+            idError ? <div className="bg-red-200 p-2 text-red-800 text-sm">{idError}</div> : null
+          }
           <FormNumberField
             id="numberEntered"
             label={label}
             defaultValue={defaultNumber}
+            error={numberEnteredError}
           />
         </div>
         <DialogFooter>

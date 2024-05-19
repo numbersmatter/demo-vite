@@ -1,41 +1,16 @@
 /* eslint-disable no-extra-semi */
-import { Button } from "~/components/ui/button";
-import { Form, useFetcher, useParams } from "@remix-run/react";
-import { FormNumberField } from "~/components/forms/number-field";
-import { useRef, useState } from "react";
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "~/components/ui/card";
-import {
-  Drawer,
-  DrawerClose,
-  DrawerContent,
-  DrawerDescription,
-  DrawerFooter,
-  DrawerHeader,
-  DrawerTitle,
-  DrawerTrigger,
-} from "~/components/ui/drawer";
-import {
-  Dialog,
-  DialogClose,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "~/components/ui/dialog"
-import { DataTable } from "../common/data-table";
+import { useParams } from "@remix-run/react";
+
 import { DialogFormSingleNumberInput, DialogFormSingleTextInput } from "../forms/dialog-form";
 
 
-function CheckOutTruck({ taskComplete, errors, dataEntry }: { taskComplete: boolean, errors: Record<string, string[]>, dataEntry: Record<string, string | number> }) {
-  const [open, setOpen] = useState(false)
+function CheckOutTruck({ dataEntry }: { errors: Record<string, string[]>, dataEntry: Record<string, string | number> }) {
+
   const params = useParams();
   const weekplanId = params.weekplanId as string
   const taskId = params.taskId as string
 
 
-  const odometerError = errors.odometer ? errors.odometer[0] : ""
 
   const currentOdometer = dataEntry["checkout-truck"] ?? 0
 
@@ -61,53 +36,7 @@ function CheckOutTruck({ taskComplete, errors, dataEntry }: { taskComplete: bool
 
 export type DriveStatus = "not-started" | "in-progress" | "completed" | "error" | "canceled"
 
-function DriveSecondHarvest({ taskComplete }: { taskComplete: boolean }) {
-  const [open, setOpen] = useState(false)
-  const setStatusFetcher = useFetcher();
-
-  const handleMarkComplete = async () => {
-    await setStatusFetcher.submit(
-      {
-        newStatus: taskComplete ? "incomplete" : "complete",
-        _action: "setTaskStatus"
-      },
-      {
-        method: "post",
-      })
-  }
-  const handleMarkInComplete = async () => {
-    await setStatusFetcher.submit(
-      {
-        newStatus: "incomplete",
-        _action: "setTaskStatus"
-      },
-      {
-        method: "post",
-      })
-  }
-
-
-  const task = {
-    name: "Drive to Second Harvest Food Bank",
-    description: "Leave at 1:45pm"
-  }
-
-  const explainText = " The address is 3330 Shorefair Dr NW, Winston-Salem, NC 27105, United States and you will need to be there by 2:30pm. The recommended leave time is 1:45pm."
-
-  const statusText = (status: DriveStatus) => {
-    switch (status) {
-      case "not-started":
-        return "Drive not started"
-      case "in-progress":
-        return "Drive in progress"
-      case "completed":
-        return "Drive completed"
-      case "error":
-        return "Error"
-      case "canceled":
-        return "Drive canceled"
-    }
-  }
+function DriveSecondHarvest() {
 
   return (
     <div className="py-4">
@@ -118,55 +47,7 @@ function DriveSecondHarvest({ taskComplete }: { taskComplete: boolean }) {
     </div>
   )
 }
-function DriveCisT({ taskComplete }: { taskComplete: boolean }) {
-  const [open, setOpen] = useState(false)
-  const [driveStatus, setDriveStatus] = useState<DriveStatus>("not-started")
-  const setStatusFetcher = useFetcher();
-
-  const handleMarkComplete = async () => {
-    await setStatusFetcher.submit(
-      {
-        newStatus: taskComplete ? "incomplete" : "complete",
-        _action: "setTaskStatus"
-      },
-      {
-        method: "post",
-      })
-    setDriveStatus("completed")
-  }
-  const handleMarkInComplete = async () => {
-    await setStatusFetcher.submit(
-      {
-        newStatus: "incomplete",
-        _action: "setTaskStatus"
-      },
-      {
-        method: "post",
-      })
-  }
-
-
-  const task = {
-    name: "Drive to Communities In Schools",
-    description: "Drive back to CIS-T."
-  }
-
-  const explainText = " The address is  19 East Guilford Street, Thomasville, NC 27360."
-
-  const statusText = (status: DriveStatus) => {
-    switch (status) {
-      case "not-started":
-        return "Drive not started"
-      case "in-progress":
-        return "Drive in progress"
-      case "completed":
-        return "Drive completed"
-      case "error":
-        return "Error"
-      case "canceled":
-        return "Drive canceled"
-    }
-  }
+function DriveCisT() {
 
   return (
     <div className="py-4">
@@ -177,28 +58,7 @@ function DriveCisT({ taskComplete }: { taskComplete: boolean }) {
 }
 
 
-function AcceptOrder({ taskComplete }: { taskComplete: boolean }) {
-  const [open, setOpen] = useState(false)
-  const inputFile = useRef(null);
-  const task = {
-    name: "Accept Order",
-    description: "Signing for pallets and inspecting order."
-  }
-  const setStatusFetcher = useFetcher();
-
-  const handleMarkComplete = async () => {
-    await setStatusFetcher.submit(
-      {
-        newStatus: taskComplete ? "incomplete" : "complete",
-        _action: "setTaskStatus"
-      },
-      {
-        method: "post",
-      })
-  }
-
-
-  const explainText = "When you arrive at Second Harvest Food Bank you will need to sign for the pallets and inspect the order. After signing for the order use your phone to take a picture of the order and upload it here."
+function AcceptOrder() {
 
 
 
@@ -209,9 +69,7 @@ function AcceptOrder({ taskComplete }: { taskComplete: boolean }) {
 }
 
 
-function OffloadColdPallets({ taskComplete }: { taskComplete: boolean }) {
-  const [open, setOpen] = useState(false)
-  const setStatusFetcher = useFetcher();
+function OffloadColdPallets() {
   return <div className="py-4">
     <div className="aspect-video">
       {/* @tslint expect-error */}
@@ -220,37 +78,18 @@ function OffloadColdPallets({ taskComplete }: { taskComplete: boolean }) {
     </div>
   </div>
 }
-function OffloadToStagingArea({ taskComplete }: { taskComplete: boolean }) {
+function OffloadToStagingArea() {
   return <div className="py-4">
 
   </div>
 };
-function MoveToStorage({ taskComplete }: { taskComplete: boolean }) {
-  const [open, setOpen] = useState(false)
-  const setStatusFetcher = useFetcher();
-  const handleMarkComplete = async () => {
-    await setStatusFetcher.submit(
-      {
-        newStatus: taskComplete ? "incomplete" : "complete",
-        _action: "setTaskStatus"
-      },
-      {
-        method: "post",
-      })
-  }
-
-  const task = {
-    name: "Move to Storage",
-    description: "Move dry goods into their storage area."
-  }
-
-  const explainText = "Space is always at a premier in our storage area. We have a couple of general categories for dry goods: canned goods, prepared boxes,  cereals and breakfast items."
+function MoveToStorage() {
 
   return <div className="py-4">
 
   </div>
 };
-function MessageFamilies({ taskComplete, dataEntry }: { taskComplete: boolean, dataEntry: Record<string, string | number> }) {
+function MessageFamilies({ dataEntry }: { dataEntry: Record<string, string | number> }) {
   const params = useParams();
   const weekplanId = params.weekplanId as string
   const taskId = params.taskId as string
@@ -273,34 +112,15 @@ function MessageFamilies({ taskComplete, dataEntry }: { taskComplete: boolean, d
     />
   </div>
 };
-function PrepareInventory({ taskComplete }: { taskComplete: boolean }) {
-  const [open, setOpen] = useState(false)
-  const setStatusFetcher = useFetcher();
-  const handleMarkComplete = async () => {
-    await setStatusFetcher.submit(
-      {
-        newStatus: taskComplete ? "incomplete" : "complete",
-        _action: "setTaskStatus"
-      },
-      {
-        method: "post",
-      })
-  }
-
-  const task = {
-    name: "Prepare Inventory",
-    description: "Time permitting do inventory of possible items."
-  }
-
-  const explainText = "Inventory is done solely for the purposes of filling out this weeks order requests. We do not have the resources to do a full inventory of all items. On DoorDash only weeks we need to have about 70 boxes of food prepared. On Drive-thru weeks we need about 150 boxes of food prepared."
+function PrepareInventory() {
 
   return <div className="py-4">
 
   </div>
 };
-function PlanServiceMenu({ taskComplete }: { taskComplete: boolean }) {
+function PlanServiceMenu() {
 
-  const explainText = "We try to have roughly similar items in each box. Our main limitation is this goal is what we receive from Second Harvest Food Bank. We don't always have 60 of one exact item in each box. So we try to substitute with similar items when necessary."
+
 
   return <div className="py-4">
 
@@ -309,32 +129,14 @@ function PlanServiceMenu({ taskComplete }: { taskComplete: boolean }) {
 
   </div>
 };
-function PlaceOrder({ taskComplete }: { taskComplete: boolean }) {
-  const [open, setOpen] = useState(false);
-  const setStatusFetcher = useFetcher();
-  const handleMarkComplete = async () => {
-    await setStatusFetcher.submit(
-      {
-        newStatus: taskComplete ? "incomplete" : "complete",
-        _action: "setTaskStatus"
-      },
-      {
-        method: "post",
-      })
-  }
+function PlaceOrder() {
 
-  const task = {
-    name: "Order from Second Harvest",
-    description: "Place next week's order."
-  }
-
-  const explainText = "We place a weekly order from Second Harvest Food Bank. This order is placed on Tuesday for pickup the following Monday."
 
   return <div className="py-4">
 
   </div>
 };
-function ReserveTruck({ taskComplete }: { taskComplete: boolean }) {
+function ReserveTruck() {
 
 
 
@@ -342,109 +144,61 @@ function ReserveTruck({ taskComplete }: { taskComplete: boolean }) {
 
   </div>
 };
-function PrepareColdItems({ taskComplete }: { taskComplete: boolean }) {
+function PrepareColdItems() {
 
   return <div className="py-4">
 
   </div>
 };
-function StageDryGoods({ taskComplete }: { taskComplete: boolean }) {
+function StageDryGoods() {
 
-  const explainText = "After cold food items are prepared, we move the nonperishable items which will go into the box to the staging area. This is done on Wednesday and Thursday."
 
-  return <div className="py-4">
-  </div>
-};
-function PrepareInPersonPickup({ taskComplete }: { taskComplete: boolean }) {
-
-  const explainText = "All of the families that requested an in-person pickup time from the message sent out on Tuesday will be arriving today. Prepare those boxes of the pickup time."
 
   return <div className="py-4">
   </div>
 };
-function BuildDeliveryBoxes({ taskComplete }: { taskComplete: boolean }) {
-  const [open, setOpen] = useState(false);
-  const explainText = "We have a set number of boxes that need to be built for DoorDash orders. These boxes are built on Thursday. The boxes are built with the non-perishable items for that box."
+function PrepareInPersonPickup() {
+
+
 
   return <div className="py-4">
   </div>
 };
-function TakeSamplePicture({ taskComplete }: { taskComplete: boolean }) {
+function BuildDeliveryBoxes() {
 
-  const explainText = "We send a picture of the box items to the families that are receiving the boxes. This is done on Friday morning and lets the family know what to expect in their box aswell as serves as a reminder to the family to expect a delivery."
 
   return <div className="py-4">
   </div>
 };
-function SealDeliveryBoxes({ taskComplete }: { taskComplete: boolean }) {
-  const explainText = "The final step in preparing the boxes is to add the frozen items and seal the boxes. This is done on Friday morning. The boxes are then ready for delivery."
+function TakeSamplePicture() {
+
+
+
+  return <div className="py-4">
+  </div>
+};
+function SealDeliveryBoxes() {
+
 
   return <div className="py-4">
 
   </div>
 };
-function RequestDoorDash({ taskComplete }: { taskComplete: boolean }) {
-  const [open, setOpen] = useState(false);
-  const setStatusFetcher = useFetcher();
-  const handleMarkComplete = async () => {
-    await setStatusFetcher.submit(
-      {
-        newStatus: taskComplete ? "incomplete" : "complete",
-        _action: "setTaskStatus"
-      },
-      {
-        method: "post",
-      })
-  }
-
-
-  const explainText = "Bulk DoorDash Delivery needs to be scheduled 1 hour prior to the first pickups. This is done on Friday morning. The DoorDash driver will arrive at noon if the request is made by 11 am."
+function RequestDoorDash() {
 
   return <div className="py-4">
   </div>
 };
-function LoadDasherTrolley({ taskComplete }: { taskComplete: boolean }) {
-  const setStatusFetcher = useFetcher();
-  const handleMarkComplete = async () => {
-    await setStatusFetcher.submit(
-      {
-        newStatus: taskComplete ? "incomplete" : "complete",
-        _action: "setTaskStatus"
-      },
-      {
-        method: "post",
-      })
-  }
+function LoadDasherTrolley() {
 
-  const task = {
-    name: "Load Box Trollies",
-    description: "Prepare boxes for each dasher."
-  }
-
-  const explainText = "Dasher's will be assigned up to 10 boxes each. The boxes are loaded onto the trollies and the dashers are given their delivery routes by DoorDash."
 
   return <div className="py-4">
   </div>
 };
-function MeetDasher({ taskComplete }: { taskComplete: boolean }) {
-  const setStatusFetcher = useFetcher();
-  const handleMarkComplete = async () => {
-    await setStatusFetcher.submit(
-      {
-        newStatus: taskComplete ? "incomplete" : "complete",
-        _action: "setTaskStatus"
-      },
-      {
-        method: "post",
-      })
-  }
+function MeetDasher() {
 
-  const task = {
-    name: "Meet Dashers",
-    description: "Meet with the DoorDash drivers."
-  }
 
-  const explainText = "Verifer Dasher's name and total number of deliveries. Hand out the trolley and delivery route. Answer any questions the Dasher may have."
+
 
   return <div className="py-4">
     <div className="aspect-video">
@@ -477,47 +231,47 @@ export function DayTasks({
 
   switch (task_id) {
     case 'checkout-truck':
-      return <CheckOutTruck taskComplete={taskComplete} errors={errors} dataEntry={dataEntry} />
+      return <CheckOutTruck errors={errors} dataEntry={dataEntry} />
     case 'drive-second-harvest':
-      return <DriveSecondHarvest taskComplete={taskComplete} />
+      return <DriveSecondHarvest />
     case 'accept-order':
-      return <AcceptOrder taskComplete={taskComplete} />
+      return <AcceptOrder />
     case 'drive-cis-t':
-      return <DriveCisT taskComplete={taskComplete} />
+      return <DriveCisT />
     case 'unload-cold-pallets':
-      return <OffloadColdPallets taskComplete={taskComplete} />
+      return <OffloadColdPallets />
     case 'unload-to-staging':
-      return <OffloadToStagingArea taskComplete={taskComplete} />
+      return <OffloadToStagingArea />
     case 'store-dry-goods':
-      return <MoveToStorage taskComplete={taskComplete} />
+      return <MoveToStorage />
     case 'send-message':
-      return <MessageFamilies taskComplete={taskComplete} dataEntry={dataEntry} />
+      return <MessageFamilies dataEntry={dataEntry} />
     case 'prepare-inventory':
-      return <PrepareInventory taskComplete={taskComplete} />
+      return <PrepareInventory />
     case 'plan-menu':
-      return <PlanServiceMenu taskComplete={taskComplete} />
+      return <PlanServiceMenu />
     case 'place-order':
-      return <PlaceOrder taskComplete={taskComplete} />
+      return <PlaceOrder />
     case 'reserve-truck':
-      return <ReserveTruck taskComplete={taskComplete} />
+      return <ReserveTruck />
     case 'prepare-cold-items':
-      return <PrepareColdItems taskComplete={taskComplete} />
+      return <PrepareColdItems />
     case 'stage-dry-goods':
-      return <StageDryGoods taskComplete={taskComplete} />
+      return <StageDryGoods />
     case 'prepare-pickup-orders':
-      return <PrepareInPersonPickup taskComplete={taskComplete} />
+      return <PrepareInPersonPickup />
     case 'build-boxes':
-      return <BuildDeliveryBoxes taskComplete={taskComplete} />
+      return <BuildDeliveryBoxes />
     case 'take-box-photo':
-      return <TakeSamplePicture taskComplete={taskComplete} />
+      return <TakeSamplePicture />
     case 'seal-boxes':
-      return <SealDeliveryBoxes taskComplete={taskComplete} />
+      return <SealDeliveryBoxes />
     case 'request-doordash':
-      return <RequestDoorDash taskComplete={taskComplete} />
+      return <RequestDoorDash />
     case 'load-trollies':
-      return <LoadDasherTrolley taskComplete={taskComplete} />
+      return <LoadDasherTrolley />
     case 'meet-dashers':
-      return <MeetDasher taskComplete={taskComplete} />
+      return <MeetDasher />
     default:
       return <div>Task not found</div>
   }

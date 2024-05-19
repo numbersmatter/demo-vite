@@ -1,9 +1,8 @@
 import { ColumnDef } from "@tanstack/react-table";
-import { Link } from "@remix-run/react";
-import { ItemLine } from "~/lib/value-estimation/types/item-estimations";
-import { Button } from "~/components/shadcn/ui/button";
-import { SingleButtonFetcher, SingleButtonForm } from "~/components/common/single-button-form";
-import { dollarValueConverter } from "~/lib/value-estimation/utils";
+import { Form, Link } from "@remix-run/react";
+import { Button } from "~/components/ui/button";
+import { dollarValueConverter } from "~/lib/utils";
+import { ItemLine } from "./types";
 
 interface ServiceListIndexCols {
   id: string;
@@ -89,13 +88,16 @@ export const serviceListItemsCols: ColumnDef<ItemLine>[] = [
     header: "Remove Item",
     cell: ({ row }) => {
       return (
-        <SingleButtonForm text="Remove Item">
+        <Form method="post">
           <input type="hidden" readOnly name="item_id" value={row.original.item_id} />
           <input type="hidden" readOnly name="item_name" value={row.original.item_name} />
           <input type="hidden" readOnly name="quantity" value={row.original.quantity} />
           <input type="hidden" readOnly name="value" value={row.original.value} />
           <input type="hidden" readOnly name="actionType" value="removeItem" />
-        </SingleButtonForm>
+          <Button type="submit" variant={"ghost"} >
+            Remove Item
+          </Button>
+        </Form>
       )
     }
   }
@@ -139,13 +141,16 @@ export const serviceListItemsUpdateCol: ColumnDef<ItemLineList>[] = [
       const actionUrl = `/service-lists/${listID}/preparing?index`
 
       return (
-        <SingleButtonFetcher actionUrl={actionUrl} text="Remove Item">
+        <Form method="post" action={actionUrl} >
           <input type="hidden" readOnly name="item_id" value={row.original.item_id} />
           <input type="hidden" readOnly name="item_name" value={row.original.item_name} />
           <input type="hidden" readOnly name="quantity" value={row.original.quantity} />
           <input type="hidden" readOnly name="value" value={row.original.value} />
           <input type="hidden" readOnly name="actionType" value="removeItem" />
-        </SingleButtonFetcher>
+          <Button type="submit" variant={"ghost"} >
+            Remove Item
+          </Button>
+        </Form>
       )
     }
   }
