@@ -1,10 +1,10 @@
 import type { ActionFunctionArgs } from "@remix-run/node";
-import { useMatches, useNavigate, useRouteLoaderData } from "@remix-run/react";
+import { useNavigate, useRouteLoaderData } from "@remix-run/react";
 import invariant from "tiny-invariant";
 import { Button } from "~/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "~/components/ui/card";
 import { protectedRoute } from "~/lib/auth/auth.server";
-import { TaskStatus, calculateWeekplanStatus, getWeekplan } from "~/lib/database/weekplan/domain-funcs";
+import { getWeekplan } from "~/lib/database/weekplan/domain-funcs";
 import { captialize } from "~/lib/utils";
 import { loader as weekplanLoader } from "~/routes/_s.weekplans.$weekplanId";
 

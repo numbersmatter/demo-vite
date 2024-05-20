@@ -1,4 +1,6 @@
+import { z } from "zod";
 import { db } from "../firestore.server";
+import { makeDomainFunction } from "domain-functions";
 
 interface TaskNumberEntry {
   number: number;
@@ -16,7 +18,20 @@ interface TaskTextEntry {
   taskId: string;
 }
 
-export const confirmWeekPlanTaskExists = async (
+const numberSchema = z.object({
+  numberEntered: z.number(),
+});
+
+const enterNumberData = (weekplanId: string, taskId: string) =>
+  makeDomainFunction(numberSchema)(async (values) => {
+    return enterTaskNumberData({
+      number: values.numberEntered,
+      weekplanId: weekplanId,
+      taskId: taskId,
+    });
+  });
+
+const confirmWeekPlanTaskExists = async (
   weekplanId: string,
   taskId: string
 ) => {
@@ -41,8 +56,7 @@ export const confirmWeekPlanTaskExists = async (
     task: true,
   };
 };
-
-export const enterTaskNumberData = async (taskNumberEntry: TaskNumberEntry) => {
+const enterTaskNumberData = async (taskNumberEntry: TaskNumberEntry) => {
   const updateData = {
     [`dataEntry.${taskNumberEntry.taskId}`]: taskNumberEntry.number,
   };
@@ -55,7 +69,7 @@ export const enterTaskNumberData = async (taskNumberEntry: TaskNumberEntry) => {
   return writeData;
 };
 
-export const enterTaskTextData = async (taskTextEntry: TaskTextEntry) => {
+const enterTaskTextData = async (taskTextEntry: TaskTextEntry) => {
   const updateData = {
     [`dataEntry.${taskTextEntry.taskId}`]: taskTextEntry.text,
   };
@@ -66,4 +80,27 @@ export const enterTaskTextData = async (taskTextEntry: TaskTextEntry) => {
   });
 
   return writeData;
+};
+
+const schemaEnterTextData = z.object({
+  textEntered: z.string().min(3).max(300),
+});
+
+const enterTextData = (weekplanId: string, taskId: string) =>
+  makeDomainFunction(schemaEnterTextData)(async (values) => {
+    return enterTaskTextData({
+      text: values.textEntered,
+      weekplanId: weekplanId,
+      taskId: taskId,
+    });
+  });
+
+export {
+  enterNumberData,
+  numberSchema,
+  confirmWeekPlanTaskExists,
+  enterTaskNumberData,
+  enterTaskTextData,
+  enterTextData,
+  schemaEnterTextData,
 };

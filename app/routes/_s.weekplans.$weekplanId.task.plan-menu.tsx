@@ -15,31 +15,10 @@ import AddMenuItemDialog from "~/components/forms/add-menu-item";
 import { protectedRoute } from "~/lib/auth/auth.server";
 import { db } from "~/lib/database/firestore.server";
 import { performMutation } from "remix-forms";
-import { ItemLine } from "~/lib/database/service-lists/types";
-import { makeDomainFunction } from "domain-functions";
-import { z } from "zod";
-const schemaAddItem = z.object({
-  item_name: z.string().min(3).max(50),
-  quantity: z.coerce.number().positive().int(),
-  value: z.coerce.number().positive().int(),
-})
-
-const addItemMutation = (service_list_id: string) => makeDomainFunction(schemaAddItem)(
-  (async (values) => {
-
-    const newItemLine: ItemLine = {
-      item_name: values.item_name,
-      quantity: values.quantity,
-      value: values.value,
-      item_id: "new-item-id"
-    }
-
-    await db.service_lists.addItem(service_list_id, newItemLine)
+import { Button } from "~/components/ui/button";
+import { addItemMutation, schemaAddItem, removeItemMutation, schemaRemoveItem } from "~/lib/database/service-lists/domain-function";
 
 
-    return { status: "success", values }
-  })
-)
 
 
 export const loader = async ({ request, params }: LoaderFunctionArgs) => {
@@ -70,10 +49,21 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
       schema: schemaAddItem,
       mutation: addItemMutation(listID)
     })
-    return json(result);
+    return json({ result });
   }
 
-  return json({ message: "sumbitted to action" });
+  if (actionType === "removeItem") {
+    const result = await performMutation({
+      request,
+      schema: schemaRemoveItem,
+      mutation: removeItemMutation(listID)
+    })
+    return json({ result });
+  }
+
+  const result = { success: false, errors: { message: ["Invalid action type"], item_name: [""], quantity: [""], value: [""] } };
+
+  return json({ result });
 };
 
 
@@ -92,8 +82,14 @@ export default function PlanMenu() {
           columns={serviceListItemsCols}
           data={data.serviceList.service_items}
         />
-        <CardFooter className="py-2">
+        <div className="px-2 py-3">
+
           <AddMenuItemDialog actionUrl={data.actionUrl} />
+        </div>
+        <CardFooter className="py-2">
+          <Button variant="outline" type="button" >
+            Next Step
+          </Button>
         </CardFooter>
       </Card>
 

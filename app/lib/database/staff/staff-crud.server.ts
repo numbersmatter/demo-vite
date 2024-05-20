@@ -1,4 +1,3 @@
-import { getFirestore } from "firebase-admin/firestore";
 import { db_paths, dataPoint } from "../firestore.server";
 
 interface StaffDoc {

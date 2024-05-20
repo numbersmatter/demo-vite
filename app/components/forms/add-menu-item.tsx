@@ -1,16 +1,7 @@
 import { useFetcher } from "@remix-run/react";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "~/components/ui/card"
 import { Button } from "~/components/ui/button"
 import {
   Dialog,
-  DialogClose,
   DialogContent,
   DialogDescription,
   DialogFooter,
@@ -21,7 +12,8 @@ import {
 import { useEffect, useState } from "react";
 import { FormTextField } from "~/components/forms/textfield";
 import { FormNumberField } from "~/components/forms/number-field";
-import { action as invoiceAction } from "~/routes/_s.weekplans.$weekplanId.task.$taskId.invoices"
+import { action as invoiceAction } from "~/routes/_s.weekplans.$weekplanId.task.plan-menu"
+
 
 
 
@@ -45,9 +37,8 @@ export default function AddMenuItemDialog({ actionUrl }: { actionUrl: string }) 
 
 
   useEffect(() => {
-    if (result.success && !isFetching) {
+    if (result.success) {
       setIsOpen(false)
-      console.log("ran effect")
     }
   }, [result.success, isFetching])
 
@@ -60,7 +51,7 @@ export default function AddMenuItemDialog({ actionUrl }: { actionUrl: string }) 
     };
 
   const displayError = {
-    item_name: errors?.item_name[0] ?? "",
+    item_name: errors?.item_name[0],
     quantity: errors?.quantity[0],
     value: errors?.value[0],
   }
@@ -77,9 +68,9 @@ export default function AddMenuItemDialog({ actionUrl }: { actionUrl: string }) 
             <DialogTitle>
               Add Item
             </DialogTitle>
-            <CardDescription>
+            <DialogDescription>
               Adds item to the service list menu.
-            </CardDescription>
+            </DialogDescription>
           </DialogHeader>
           <div className="grid gap-4 py-4">
             <FormTextField
