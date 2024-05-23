@@ -10,6 +10,7 @@ import { getAction } from "~/lib/utils";
 import { db } from "~/lib/database/firestore.server";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "~/components/ui/card"
 import { DayTasks } from "~/components/task-components/task-steps";
+import { addAllSeatsMutation, addAllSeatsSchema } from "~/lib/database/service-lists/domain-function";
 
 
 
@@ -29,6 +30,10 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
   const weekplan = await db.weekplan.read(weekplanId);
   if (!weekplan) {
     throw new Error("Weekplan not found");
+  }
+  const serviceList = await db.service_lists.read(weekplanId);
+  if (!serviceList) {
+    throw new Error("Service List not found");
   }
   const dayOfTask = findTaskDay(weekplan, params.taskId as string)
   if (!dayOfTask) {
@@ -59,6 +64,18 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
 
   if (action === "toDayPage") {
     return redirect(`/weekplans/${weekplanId}/day/${dayOfTask}`);
+  }
+
+  if (action === "addAllSeats") {
+    const listId = weekplan.id;
+    const service_period_id = serviceList.service_period_id;
+    const result = await performMutation({
+      request,
+      schema: addAllSeatsSchema,
+      mutation: addAllSeatsMutation(listId, service_period_id),
+    })
+
+    return json(result);
   }
 
   return json({ error: "Invalid action" }, { status: 400 });

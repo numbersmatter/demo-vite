@@ -1,6 +1,6 @@
 import { FieldValue } from "firebase-admin/firestore";
 import { db } from "../firestore.server";
-import { ServiceListAdd } from "./types";
+import { ServiceListAdd, ServiceListId } from "./types";
 import { ItemLine } from "~/lib/database/service-lists/types";
 import { makeDomainFunction } from "domain-functions";
 import { z } from "zod";
@@ -64,10 +64,80 @@ const removeItemMutation = (service_list_id: string) =>
     return { status: "success", values };
   });
 
+const seatMutSchema = z.object({
+  seatID: z.string().length(20),
+  actionType: z.enum(["addSeat", "removeSeat"]),
+});
+
+const addAllSeatsSchema = z.object({
+  _action: z.enum(["addAllSeats"]),
+});
+
+const addMutation = (listId: ServiceListId) =>
+  makeDomainFunction(seatMutSchema)(async ({ seatID }) => {
+    const seat = await db.seats.read(seatID);
+    if (!seat) {
+      return {
+        status: 404,
+        message: "Seat not found",
+      };
+    }
+
+    await db.service_lists.addSeat(listId, seatID);
+
+    return {
+      status: 200,
+      message: "Seat added",
+    };
+  });
+const removeMutation = (listId: ServiceListId) =>
+  makeDomainFunction(seatMutSchema)(async ({ seatID }) => {
+    const seat = await db.seats.read(seatID);
+    if (!seat) {
+      return {
+        status: 404,
+        message: "Seat not found",
+      };
+    }
+
+    await db.service_lists.removeSeat(listId, seatID);
+
+    return {
+      status: 200,
+      message: "Seat removed",
+    };
+  });
+
+const addAllSeatsMutation = (
+  listId: ServiceListId,
+  service_period_id: string
+) =>
+  makeDomainFunction(addAllSeatsSchema)(async (values) => {
+    const allSeats = await db.seats.queryByString(
+      "service_period_id",
+      service_period_id
+    );
+    const seatIDs = allSeats.map((seat) => seat.id);
+
+    const addWrites = await db.service_lists.update(listId, {
+      seats_array: seatIDs,
+    });
+
+    return {
+      status: 200,
+      message: "All Seats added",
+    };
+  });
+
 export {
   makeServiceListWeekPlan,
   addItemMutation,
   removeItemMutation,
   schemaAddItem,
   schemaRemoveItem,
+  addMutation,
+  removeMutation,
+  addAllSeatsMutation,
+  addAllSeatsSchema,
+  seatMutSchema,
 };

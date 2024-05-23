@@ -2,6 +2,7 @@
 import { useParams } from "@remix-run/react";
 
 import { DialogFormSingleNumberInput, DialogFormSingleTextInput } from "../forms/dialog-form";
+import { AddAllFamilies } from "./add-all-families";
 
 
 function CheckOutTruck({ dataEntry }: { errors: Record<string, string[]>, dataEntry: Record<string, string | number> }) {
@@ -217,6 +218,16 @@ function MeetDasher() {
 };
 
 
+function AddFamilies() {
+
+
+
+  return <div className="py-4">
+    <AddAllFamilies />
+  </div>
+};
+
+
 
 export function DayTasks({
   task_id, taskStatus, errors, dataEntry
@@ -272,6 +283,8 @@ export function DayTasks({
       return <LoadDasherTrolley />
     case 'meet-dashers':
       return <MeetDasher />
+    case 'add-families':
+      return <AddFamilies />
     default:
       return <div>Task not found</div>
   }
