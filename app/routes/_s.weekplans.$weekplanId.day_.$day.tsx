@@ -94,7 +94,9 @@ export default function WeekPlanIdDayRoute() {
           steps={taskSteps}
         />
       </div>
-      <pre>{JSON.stringify(taskDay["monday"], null, 2)}</pre>
+      <pre>{JSON.stringify(taskSteps, null, 2)}</pre>
+      <pre>{JSON.stringify(taskDay["tuesday"], null, 2)}</pre>
+      <pre>{JSON.stringify(weekplan.tasks, null, 2)}</pre>
       <pre>{JSON.stringify(taskStatus, null, 2)}</pre>
     </div>
   );

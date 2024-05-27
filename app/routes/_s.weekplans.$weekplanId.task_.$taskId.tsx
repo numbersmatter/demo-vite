@@ -16,8 +16,22 @@ import { addAllSeatsMutation, addAllSeatsSchema } from "~/lib/database/service-l
 
 
 export const loader = async ({ request, params }: LoaderFunctionArgs) => {
+  await protectedRoute(request);
+  const weekplanId = params.weekplanId ?? "no-Id";
+  const weekplan = await db.weekplan.read(weekplanId);
+  if (!weekplan) {
+    throw new Error("Weekplan not found");
+  }
+  const servicelist = await db.service_lists.read(weekplanId);
+  if (!servicelist) {
+    throw new Error("Service List not found");
+  }
+  const seats = await db.seats.queryByString("service_period_id", servicelist.service_period_id)
 
-  return json({});
+  const seatsNotAssigned = seats
+    .filter(seat => !servicelist.seats_array.includes(seat.id))
+
+  return json({ servicelist, seatsNotAssigned });
 };
 
 

@@ -72,6 +72,12 @@ const tuesdayTasks: DayTask[] = [
     id: "send-message",
   },
   {
+    title: "Add Delivery Families",
+    description: "Add families to delivery list.",
+    button_text: "Next",
+    id: "add-families",
+  },
+  {
     title: "Prepare Inventory",
     description: "Time permitting do inventory.",
     button_text: "Next",
@@ -172,7 +178,7 @@ export const allTasks = {
   "checkout-truck": {
     title: "Checkout Truck",
     description: "2:30 pm appointment",
-    id: "check-out-truck",
+    id: "checkout-truck",
   },
   "drive-second-harvest": {
     title: "Drive to Second Harvest",
@@ -274,6 +280,11 @@ export const allTasks = {
     title: "Meet Dashers",
     description: "Meet DoorDash Drivers.",
     id: "meet-dashers",
+  },
+  "add-families": {
+    title: "Add Delivery Families",
+    description: "Add families to delivery list.",
+    id: "add-families",
   },
 };
 

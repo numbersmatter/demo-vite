@@ -1,5 +1,5 @@
 import type { ActionFunctionArgs } from "@remix-run/node";
-import { json, useLoaderData } from "@remix-run/react"
+import { Form, json, redirect, useLoaderData } from "@remix-run/react"
 import type { LoaderFunctionArgs } from "@remix-run/node";
 import {
   Card,
@@ -17,6 +17,7 @@ import { db } from "~/lib/database/firestore.server";
 import { performMutation } from "remix-forms";
 import { Button } from "~/components/ui/button";
 import { addItemMutation, schemaAddItem, removeItemMutation, schemaRemoveItem } from "~/lib/database/service-lists/domain-function";
+import { ToggleCompleteSchema, findTaskDay, markTaskCompleteMutation } from "~/lib/database/weekplan/domain-funcs";
 
 
 
@@ -31,8 +32,10 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   }
 
   const actionUrl = `/weekplans/${serviceListId}/task/plan-menu`;
+  const markCompleteUrl = `/weekplans/${serviceListId}/task/plan-menu`;
+  const markValue = "complete";
 
-  return json({ serviceList, actionUrl });
+  return json({ serviceList, actionUrl, markCompleteUrl, markValue });
 };
 
 
@@ -41,7 +44,18 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
   const cloneRequest = request.clone();
   const formData = await cloneRequest.formData();
   const actionType = formData.get("actionType");
-  const listID = params.weekplanId ?? "no-id";
+  const weekplanId = params.weekplanId ?? "no-id";
+  const listID = weekplanId;
+
+  const weekplan = await db.weekplan.read(weekplanId);
+  if (!weekplan) {
+    throw new Error("Weekplan not found");
+  }
+
+  const dayOfTask = findTaskDay(weekplan, "plan-menu")
+  if (!dayOfTask) {
+    throw new Error("Task not found");
+  }
 
   if (actionType === "addItem") {
     const result = await performMutation({
@@ -60,6 +74,22 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
     })
     return json({ result });
   }
+
+  if (actionType === "toggleComplete") {
+    const result = await performMutation({
+      request,
+      schema: ToggleCompleteSchema,
+      mutation: markTaskCompleteMutation(weekplanId),
+    })
+
+    if (!result.success) {
+      return json(result);
+    }
+
+
+    return redirect(`/weekplans/${weekplanId}/day/${dayOfTask}`);
+  }
+
 
   const result = { success: false, errors: { message: ["Invalid action type"], item_name: [""], quantity: [""], value: [""] } };
 
@@ -87,9 +117,13 @@ export default function PlanMenu() {
           <AddMenuItemDialog actionUrl={data.actionUrl} />
         </div>
         <CardFooter className="py-2">
-          <Button variant="outline" type="button" >
-            Next Step
-          </Button>
+          <Form method="POST">
+            <input type="hidden" name="taskId" value={"plan-menu"} />
+            <input type="hidden" name="mark" value={data.markValue} />
+            <Button name="actionType" value="toggleComplete" type="submit">
+              Mark Complete
+            </Button>
+          </Form>
         </CardFooter>
       </Card>
 

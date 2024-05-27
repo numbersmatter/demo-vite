@@ -1,9 +1,10 @@
 /* eslint-disable no-extra-semi */
-import { useParams } from "@remix-run/react";
-
-import { DialogFormSingleNumberInput, DialogFormSingleTextInput } from "../forms/dialog-form";
+import { useParams, useLoaderData } from "@remix-run/react";
+import {
+  DialogFormSingleNumberInput, DialogFormSingleTextInput
+} from "../forms/dialog-form";
 import { AddAllFamilies } from "./add-all-families";
-
+import { loader as taskloader } from "~/routes/_s.weekplans.$weekplanId.task_.$taskId";
 
 function CheckOutTruck({ dataEntry }: { errors: Record<string, string[]>, dataEntry: Record<string, string | number> }) {
 
@@ -219,11 +220,21 @@ function MeetDasher() {
 
 
 function AddFamilies() {
+  const loaderData = useLoaderData<typeof taskloader>();
+  const numberOfSeats = loaderData.servicelist.seats_array.length;
 
-
+  const allSeatsAreAdded = loaderData.seatsNotAssigned.length === 0;
 
   return <div className="py-4">
-    <AddAllFamilies />
+    {
+      allSeatsAreAdded ? <p>{`All ${numberOfSeats} have been assigned.`}</p>
+
+        : <div>
+          <p>{`${loaderData.seatsNotAssigned.length} seats are not assigned.`}</p>
+          <AddAllFamilies />
+        </div>
+    }
+    {/* <pre>{JSON.stringify(loaderData.servicelist.seats_array, null, 2)}</pre> */}
   </div>
 };
 
